@@ -1,7 +1,7 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
+import React from "react";
+import ReactDOM from "react-dom/client";
 
-import './index.css'
+import "./index.css";
 
 import {
   GroupingState,
@@ -13,61 +13,61 @@ import {
   getExpandedRowModel,
   ColumnDef,
   flexRender,
-} from '@tanstack/react-table'
-import { makeData, Person } from './makeData'
+} from "@tanstack/react-table";
+import { makeData, Person } from "./makeData";
 
 function App() {
-  const rerender = React.useReducer(() => ({}), {})[1]
+  const rerender = React.useReducer(() => ({}), {})[1];
 
   const columns = React.useMemo<ColumnDef<Person>[]>(
     () => [
       {
-        header: 'Name',
+        header: "Name",
         columns: [
           {
-            accessorKey: 'firstName',
-            header: 'First Name',
-            cell: info => info.getValue(),
+            accessorKey: "firstName",
+            header: "First Name",
+            cell: (info) => info.getValue().label,
           },
           {
-            accessorFn: row => row.lastName,
-            id: 'lastName',
+            accessorFn: (row) => row.lastName,
+            id: "lastName",
             header: () => <span>Last Name</span>,
-            cell: info => info.getValue(),
+            cell: (info) => info.getValue(),
           },
         ],
       },
       {
-        header: 'Info',
+        header: "Info",
         columns: [
           {
-            accessorKey: 'age',
-            header: () => 'Age',
+            accessorKey: "age",
+            header: () => "Age",
             aggregatedCell: ({ getValue }) =>
               Math.round(getValue<number>() * 100) / 100,
-            aggregationFn: 'median',
+            aggregationFn: "median",
           },
           {
-            header: 'More Info',
+            header: "More Info",
             columns: [
               {
-                accessorKey: 'visits',
+                accessorKey: "visits",
                 header: () => <span>Visits</span>,
-                aggregationFn: 'sum',
+                aggregationFn: "sum",
                 // aggregatedCell: ({ getValue }) => getValue().toLocaleString(),
               },
               {
-                accessorKey: 'status',
-                header: 'Status',
+                accessorKey: "status",
+                header: "Status",
               },
               {
-                accessorKey: 'progress',
-                header: 'Profile Progress',
+                accessorKey: "progress",
+                header: "Profile Progress",
                 cell: ({ getValue }) =>
-                  Math.round(getValue<number>() * 100) / 100 + '%',
-                aggregationFn: 'mean',
+                  Math.round(getValue<number>() * 100) / 100 + "%",
+                aggregationFn: "mean",
                 aggregatedCell: ({ getValue }) =>
-                  Math.round(getValue<number>() * 100) / 100 + '%',
+                  Math.round(getValue<number>() * 100) / 100 + "%",
               },
             ],
           },
@@ -75,12 +75,12 @@ function App() {
       },
     ],
     []
-  )
+  );
 
-  const [data, setData] = React.useState(() => makeData(100000))
-  const refreshData = () => setData(() => makeData(100000))
+  const [data, setData] = React.useState(() => makeData(100000));
+  const refreshData = () => setData(() => makeData(100000));
 
-  const [grouping, setGrouping] = React.useState<GroupingState>([])
+  const [grouping, setGrouping] = React.useState<GroupingState>([]);
 
   const table = useReactTable({
     data,
@@ -95,16 +95,16 @@ function App() {
     getPaginationRowModel: getPaginationRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     debugTable: true,
-  })
+  });
 
   return (
     <div className="p-2">
       <div className="h-2" />
       <table>
         <thead>
-          {table.getHeaderGroups().map(headerGroup => (
+          {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
-              {headerGroup.headers.map(header => {
+              {headerGroup.headers.map((header) => {
                 return (
                   <th key={header.id} colSpan={header.colSpan}>
                     {header.isPlaceholder ? null : (
@@ -115,7 +115,7 @@ function App() {
                             {...{
                               onClick: header.column.getToggleGroupingHandler(),
                               style: {
-                                cursor: 'pointer',
+                                cursor: "pointer",
                               },
                             }}
                           >
@@ -123,7 +123,7 @@ function App() {
                               ? `🛑(${header.column.getGroupedIndex()}) `
                               : `👊 `}
                           </button>
-                        ) : null}{' '}
+                        ) : null}{" "}
                         {flexRender(
                           header.column.columnDef.header,
                           header.getContext()
@@ -131,28 +131,28 @@ function App() {
                       </div>
                     )}
                   </th>
-                )
+                );
               })}
             </tr>
           ))}
         </thead>
         <tbody>
-          {table.getRowModel().rows.map(row => {
+          {table.getRowModel().rows.map((row) => {
             return (
               <tr key={row.id}>
-                {row.getVisibleCells().map(cell => {
+                {row.getVisibleCells().map((cell) => {
                   return (
                     <td
                       {...{
                         key: cell.id,
                         style: {
                           background: cell.getIsGrouped()
-                            ? '#0aff0082'
+                            ? "#0aff0082"
                             : cell.getIsAggregated()
-                            ? '#ffa50078'
+                            ? "#ffa50078"
                             : cell.getIsPlaceholder()
-                            ? '#ff000042'
-                            : 'white',
+                            ? "#ff000042"
+                            : "white",
                         },
                       }}
                     >
@@ -164,16 +164,16 @@ function App() {
                               onClick: row.getToggleExpandedHandler(),
                               style: {
                                 cursor: row.getCanExpand()
-                                  ? 'pointer'
-                                  : 'normal',
+                                  ? "pointer"
+                                  : "normal",
                               },
                             }}
                           >
-                            {row.getIsExpanded() ? '👇' : '👉'}{' '}
+                            {row.getIsExpanded() ? "👇" : "👉"}{" "}
                             {flexRender(
                               cell.column.columnDef.cell,
                               cell.getContext()
-                            )}{' '}
+                            )}{" "}
                             ({row.subRows.length})
                           </button>
                         </>
@@ -193,10 +193,10 @@ function App() {
                         )
                       )}
                     </td>
-                  )
+                  );
                 })}
               </tr>
-            )
+            );
           })}
         </tbody>
       </table>
@@ -207,33 +207,33 @@ function App() {
           onClick={() => table.setPageIndex(0)}
           disabled={!table.getCanPreviousPage()}
         >
-          {'<<'}
+          {"<<"}
         </button>
         <button
           className="border rounded p-1"
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage()}
         >
-          {'<'}
+          {"<"}
         </button>
         <button
           className="border rounded p-1"
           onClick={() => table.nextPage()}
           disabled={!table.getCanNextPage()}
         >
-          {'>'}
+          {">"}
         </button>
         <button
           className="border rounded p-1"
           onClick={() => table.setPageIndex(table.getPageCount() - 1)}
           disabled={!table.getCanNextPage()}
         >
-          {'>>'}
+          {">>"}
         </button>
         <span className="flex items-center gap-1">
           <div>Page</div>
           <strong>
-            {table.getState().pagination.pageIndex + 1} of{' '}
+            {table.getState().pagination.pageIndex + 1} of{" "}
             {table.getPageCount()}
           </strong>
         </span>
@@ -242,20 +242,20 @@ function App() {
           <input
             type="number"
             defaultValue={table.getState().pagination.pageIndex + 1}
-            onChange={e => {
-              const page = e.target.value ? Number(e.target.value) - 1 : 0
-              table.setPageIndex(page)
+            onChange={(e) => {
+              const page = e.target.value ? Number(e.target.value) - 1 : 0;
+              table.setPageIndex(page);
             }}
             className="border p-1 rounded w-16"
           />
         </span>
         <select
           value={table.getState().pagination.pageSize}
-          onChange={e => {
-            table.setPageSize(Number(e.target.value))
+          onChange={(e) => {
+            table.setPageSize(Number(e.target.value));
           }}
         >
-          {[10, 20, 30, 40, 50].map(pageSize => (
+          {[10, 20, 30, 40, 50].map((pageSize) => (
             <option key={pageSize} value={pageSize}>
               Show {pageSize}
             </option>
@@ -271,14 +271,14 @@ function App() {
       </div>
       <pre>{JSON.stringify(grouping, null, 2)}</pre>
     </div>
-  )
+  );
 }
 
-const rootElement = document.getElementById('root')
-if (!rootElement) throw new Error('Failed to find the root element')
+const rootElement = document.getElementById("root");
+if (!rootElement) throw new Error("Failed to find the root element");
 
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
     <App />
   </React.StrictMode>
-)
+);
